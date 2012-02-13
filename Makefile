@@ -36,9 +36,9 @@ export CXX ?= g++
 export AS := nasm
 export RANLIB ?= ranlib
 
-export CFLAGS := -Wall
+export CFLAGS := -Wall -fPIC
 #export CUFLAGS := ""
-export CXXFLAGS := -Wall -Wno-unused-parameter
+export CXXFLAGS := -Wall -Wno-unused-parameter -fPIC
 C_CXX_FLAGS := -MMD -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGE_FILES -I$(BASE_DIR) -I$(BASE_DIR)/Crypto
 export ASFLAGS := -Ox -D __GNUC__
 export LFLAGS :=
@@ -273,6 +273,8 @@ all clean:
 		PROJ=$$(echo $$DIR | cut -d/ -f1); \
 		$(MAKE) -C $$DIR -f $$PROJ.make NAME=$$PROJ $(MAKECMDGOALS) || exit $?; \
 		export LIBS="$(BASE_DIR)/$$DIR/$$PROJ.a $$LIBS"; \
+		export LIBS="${LIBS} $(BASE_DIR)/Libraries/libCore.a.so $(BASE_DIR)/Libraries/libDriver.a.so $(BASE_DIR)/Libraries/libPlatform.a.so $(BASE_DIR)/Libraries/libVolume.a.so"; \
+		#export LIBS="${LIBS}:$(BASE_DIR)/Core/Core.a.so:$(BASE_DIR)/Volume/:$(BASE_DIR)/Platform/:$(BASE_DIR)/Driver/Fuse/"; \
 	done	
 
 

@@ -20,7 +20,7 @@ clean:
 %.o: %.cu
 	@echo Compiling $(<F)
 	@echo $@
-	$(CCU) $(CUFLAGS) -lcud -c $< -o $@ 
+	$(CCU) $(CUFLAGS) -c $< -o $@ 
 	#$(CCU) $(CUFLAGS) -c $< -o $@
 # END GWAT
 
@@ -60,7 +60,17 @@ TR_SED_BIN := tr '\n' ' ' | tr -s ' ' ',' | sed -e 's/^,//g' -e 's/,$$/n/' | tr 
 -include $(OBJS:.o=.d)
 
 
+#$(NAME).a: $(OBJS)
+#	@echo Updating library $@
+#	$(AR) $(AFLAGS) -rcu $@ $(OBJS)
+#	$(RANLIB) $@
+
 $(NAME).a: $(OBJS)
 	@echo Updating library $@
-	$(AR) $(AFLAGS) -rcu $@ $(OBJS)
-	$(RANLIB) $@
+	@echo g++ -shared -Wl,-soname,$@ -L/usr/local/cuda/lib -lcuda -lcudart -o $@ $(OBJS)
+	g++ -shared -Wl,-soname,$@ -L/usr/local/cuda/lib -lcuda -lcudart -o $@ $(OBJS)
+	@echo mv ./$@ $(BASE_DIR)/Libraries/
+	mv ./$@ $(BASE_DIR)/Libraries/
+	@echo cp $(BASE_DIR)/Libraries/$@ $(BASE_DIR)/Libraries/lib$@.so
+	cp $(BASE_DIR)/Libraries/$@ $(BASE_DIR)/Libraries/lib$@.so
+	#$(RANLIB) $@

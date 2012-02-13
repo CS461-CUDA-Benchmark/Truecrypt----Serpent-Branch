@@ -103,6 +103,7 @@ FUSE_LIBS = $(shell pkg-config fuse --libs)
 
 TC_VERSION = $(shell grep VERSION_STRING ../Common/Tcdefs.h | head -n 1 | cut -d'"' -f 2)
 
+#$(APPNAME): ../Core/libCore.a.so ../Platform/libPlatform.a.so ../Driver/Fuse/libDriver.a.so ../Volume/libVolume.a.so $(OBJS)
 $(APPNAME): $(LIBS) $(OBJS)
 	@echo Linking $@
 	@echo APPNAME: $(APPNAME)
@@ -111,8 +112,8 @@ $(APPNAME): $(LIBS) $(OBJS)
 	@echo LIBS: $(LIBS)
 	@echo FUSE_LIBS: $(FUSE_LIBS)
 	@echo WX_LIBS: $(WX_LIBS)
-	@echo $(CXX) -o $(APPNAME) $(LFLAGS) $(OBJS) $(LIBS) -lcuda -lcudart $(FUSE_LIBS) $(WX_LIBS)
-	$(CXX) -o $(APPNAME) $(LFLAGS) $(OBJS) $(LIBS) -lcuda -lcudart $(FUSE_LIBS) $(WX_LIBS)
+	@echo $(CXX) -o $(APPNAME) $(LFLAGS) $(OBJS) -L$(BASE_DIR)/Libraries -L/usr/local/cuda/lib/ $(LIBS) -lcuda -lcudart $(FUSE_LIBS) $(WX_LIBS)
+	$(CXX) -o $(APPNAME) $(LFLAGS) $(OBJS) -L$(BASE_DIR)/Libraries/ -L/usr/local/cuda/lib/ $(LIBS) -lcuda -lcudart $(FUSE_LIBS) $(WX_LIBS)
 
 ifeq "$(TC_BUILD_CONFIG)" "Release"
 ifndef NOSTRIP
